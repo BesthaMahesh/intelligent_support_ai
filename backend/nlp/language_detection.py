@@ -11,11 +11,20 @@ SCRIPT_RANGES = {
     "Bengali": (0x0980, 0x09FF),
 }
 
-# Romanized / Transliterated keywords
+# Romanized / Transliterated keywords (strictly non-English terms)
 ROMANIZED_KEYWORDS = {
-    "Tamil": ["vanakkam", "eppadi", "irukeenga", "enoda", "order", "panam", "thirumba", "vara", "illai", "kedaikala", "romba"],
-    "Hindi": ["namaste", "kya", "mera", "paise", "kat", "gaye", "order", "nahi", "aaya", "kab", "milega", "kripya", "madad"],
-    "Telugu": ["namaskaram", "naa", "order", "dabbu", "raledu", "eppudu", "vastundi", "sahayam"],
+    "Tamil": ["vanakkam", "eppadi", "irukeenga", "enoda", "panam", "thirumba", "vara", "illai", "kedaikala", "romba", "ungal", "enakku", "puriyala", "nandri"],
+    "Hindi": ["namaste", "kya", "mera", "paise", "kat", "gaye", "nahi", "aaya", "kab", "milega", "kripya", "madad", "dhanyawad", "mujhe", "chahiye", "hai", "batao"],
+    "Telugu": ["namaskaram", "naa", "dabbu", "raledu", "eppudu", "vastundi", "sahayam", "dhanyavadalu", "naku", "kavali", "undi", "cheppandi"],
+}
+
+COMMON_ENGLISH_WORDS = {
+    "the", "is", "my", "was", "but", "in", "it", "to", "for", "with", "this", "that",
+    "have", "has", "had", "are", "you", "your", "showing", "pending", "payment", "deducted",
+    "order", "orders", "please", "check", "refund", "return", "cancel", "status", "where",
+    "what", "how", "when", "why", "who", "which", "delivery", "delivered", "shipping", "shipped",
+    "not", "received", "account", "help", "support", "agent", "ticket", "issue", "money", "still",
+    "id", "from", "on", "at", "by", "an", "be", "do", "does", "did", "can", "could", "would", "should"
 }
 
 def detect_language(text: str) -> Dict[str, Any]:
@@ -29,7 +38,7 @@ def detect_language(text: str) -> Dict[str, Any]:
     clean_text = text.strip()
     total_chars = len(clean_text)
     
-    # 1. Check Unicode script counts
+    # 1. Check Unicode script counts (native Indic scripts)
     script_counts = {lang: 0 for lang in SCRIPT_RANGES}
     for char in clean_text:
         code = ord(char)
@@ -44,17 +53,26 @@ def detect_language(text: str) -> Dict[str, Any]:
         if confidence > 0.3:
             return {"language": max_script_lang, "confidence": max(0.85, confidence)}
 
-    # 2. Check Romanized / Transliterated text
+    # 2. Check Romanized / Transliterated text vs English
     lower_text = clean_text.lower()
-    words = re.findall(r'\b\w+\b', lower_text)
+    words = re.findall(r'\b[a-z]+\b', lower_text)
     total_words = len(words)
     
     if total_words > 0:
+        english_matches = sum(1 for w in words if w in COMMON_ENGLISH_WORDS)
+        best_lang = None
+        best_matches = 0
+        
         for lang, keywords in ROMANIZED_KEYWORDS.items():
             matches = sum(1 for w in words if w in keywords)
-            if matches >= 2 or (matches == 1 and total_words <= 3):
-                conf = round(min(0.95, 0.65 + (matches / total_words) * 0.3), 2)
-                return {"language": lang, "confidence": conf}
+            if matches > best_matches:
+                best_matches = matches
+                best_lang = lang
+
+        # Only classify as Romanized Indic if there are meaningful keywords and English doesn't dominate
+        if best_lang and best_matches >= 2 and best_matches >= english_matches:
+            conf = round(min(0.95, 0.65 + (best_matches / total_words) * 0.3), 2)
+            return {"language": best_lang, "confidence": conf}
 
     # Default to English
     return {"language": "English", "confidence": 0.98}

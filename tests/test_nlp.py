@@ -6,17 +6,25 @@ from backend.nlp import (
 )
 
 def test_language_detection():
-    # Tamil test
+    # Tamil test (native script)
     res_ta = detect_language("வணக்கம் என் ஆர்டர் எங்கே உள்ளது?")
     assert res_ta["language"] == "Tamil"
     
-    # Hindi test
+    # Hindi test (native script)
     res_hi = detect_language("मेरा आर्डर अभी तक नहीं आया")
     assert res_hi["language"] == "Hindi"
 
     # English test
     res_en = detect_language("Where is my order ORD-78231?")
     assert res_en["language"] == "English"
+
+    # English test with multiple order / payment mentions (should not be misclassified)
+    res_en_payment = detect_language("My payment was deducted but my order is still showing Payment Pending. Order ID is ORD-78231")
+    assert res_en_payment["language"] == "English"
+
+    # Romanized Tamil test
+    res_ta_roman = detect_language("vanakkam enoda panam thirumba vara illai")
+    assert res_ta_roman["language"] == "Tamil"
 
 def test_normalization():
     raw = "My ord 78231 paid ₹ 24,990"
