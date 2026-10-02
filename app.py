@@ -31,7 +31,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Sophisticated Enterprise SaaS CSS Design System
+# Sophisticated Enterprise SaaS CSS Design System (Mobile-First & Responsive)
 # CAUTION: Do NOT apply font-family !important to [class*="st-"] or [class*="css"] to preserve Material Icon ligatures
 st.markdown("""
 <style>
@@ -41,11 +41,21 @@ st.markdown("""
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         color: #0F172A;
         background-color: #F8FAFC;
+        -webkit-tap-highlight-color: transparent;
     }
     
     /* App background */
     .stApp {
         background-color: #F8FAFC;
+    }
+
+    /* Main container padding optimization */
+    .main .block-container {
+        padding-top: 2rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+        max-width: 1200px;
     }
     
     /* Metrics Card Styling */
@@ -55,12 +65,14 @@ st.markdown("""
         border-radius: 8px !important;
         padding: 12px 14px !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+        min-width: 100% !important;
     }
     div[data-testid="stMetricValue"] {
         font-size: 1.45rem !important;
         font-weight: 800 !important;
         color: #0F172A !important;
         line-height: 1.2 !important;
+        word-break: break-word !important;
     }
     div[data-testid="stMetricLabel"] {
         font-size: 0.75rem !important;
@@ -70,13 +82,15 @@ st.markdown("""
         letter-spacing: 0.5px !important;
     }
     
-    /* Enterprise Buttons */
+    /* Enterprise Touch-Friendly Buttons */
     .stButton > button {
         border-radius: 6px !important;
         font-weight: 600 !important;
-        font-size: 0.85rem !important;
-        padding: 0.4rem 0.8rem !important;
+        font-size: 0.88rem !important;
+        min-height: 42px !important;
+        padding: 0.5rem 0.9rem !important;
         transition: all 0.15s ease-in-out !important;
+        touch-action: manipulation;
     }
     .stButton > button[kind="primary"] {
         background-color: #2563EB !important;
@@ -97,6 +111,11 @@ st.markdown("""
         border-color: #94A3B8 !important;
         color: #0F172A !important;
     }
+
+    /* Inputs touch optimization */
+    input, select, textarea {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+    }
     
     /* Sidebar styling */
     section[data-testid="stSidebar"] {
@@ -114,14 +133,17 @@ st.markdown("""
     
     /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 16px;
+        gap: 12px;
         border-bottom: 1px solid #E2E8F0;
+        overflow-x: auto;
+        flex-wrap: nowrap;
     }
     .stTabs [data-baseweb="tab"] {
         font-weight: 600;
         font-size: 0.88rem;
         color: #64748B;
-        padding: 8px 4px;
+        padding: 10px 8px;
+        white-space: nowrap;
     }
     .stTabs [aria-selected="true"] {
         color: #2563EB !important;
@@ -131,7 +153,43 @@ st.markdown("""
     /* Chat message container styling */
     .stChatMessage {
         background: transparent !important;
-        padding: 8px 0 !important;
+        padding: 6px 0 !important;
+    }
+
+    /* Responsive Mobile Overrides */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 2rem !important;
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+
+        h1, h2 {
+            font-size: 1.5rem !important;
+        }
+
+        h3 {
+            font-size: 1.25rem !important;
+        }
+
+        div[data-testid="stMetricValue"] {
+            font-size: 1.2rem !important;
+        }
+
+        div[data-testid="column"] {
+            min-width: 100% !important;
+            margin-bottom: 0.5rem;
+        }
+
+        .stButton > button {
+            width: 100% !important;
+            min-height: 44px !important;
+        }
+
+        div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 12px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)

@@ -8,7 +8,7 @@ def is_valid_email(email: str) -> bool:
     return bool(re.match(pattern, email.strip()))
 
 def render_login():
-    col_l, col_center, col_r = st.columns([1, 2, 1])
+    col_l, col_center, col_r = st.columns([1, 4, 1])
     with col_center:
         st.markdown("# 💼 INTELLIGENT SUPPORT")
         st.caption("Enterprise Customer Experience Platform")
