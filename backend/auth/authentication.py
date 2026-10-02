@@ -14,8 +14,12 @@ security = HTTPBearer(auto_error=False)
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
     return db.query(User).filter(User.email == email.lower()).first()
 
-def create_user(db: Session, email: str, password: str, full_name: str, role: str = "customer") -> User:
-    user_id = f"USR-{uuid.uuid4().hex[:8].upper()}"
+def create_user(db: Session, email: str, password: str, full_name: str, role: str = "customer", user_id: Optional[str] = None) -> User:
+    if not user_id:
+        if role == "customer":
+            user_id = f"CUS-{uuid.uuid4().hex[:6].upper()}"
+        else:
+            user_id = f"USR-{uuid.uuid4().hex[:6].upper()}"
     hashed_pwd = hash_password(password)
     new_user = User(
         id=user_id,
@@ -64,15 +68,18 @@ def seed_default_users():
     db = SessionLocal()
     try:
         defaults = [
-            ("admin@support.ai", "admin123", "System Administrator", "admin"),
-            ("agent@support.ai", "agent123", "Lead Support Specialist", "agent"),
-            ("customer@support.ai", "customer123", "Rajesh Kumar", "customer"),
-            ("priya.sharma@example.com", "customer123", "Priya Sharma", "customer"),
-            ("anand.v@example.com", "customer123", "Anand Venkatesh", "customer")
+            ("USR-ADMIN01", "admin@support.ai", "admin123", "System Administrator", "admin"),
+            ("USR-AGENT01", "agent@support.ai", "agent123", "Lead Support Specialist", "agent"),
+            ("CUS-8821", "customer@support.ai", "customer123", "Rajesh Kumar", "customer"),
+            ("CUS-9410", "priya.sharma@example.com", "customer123", "Priya Sharma", "customer"),
+            ("CUS-7712", "anand.v@example.com", "customer123", "Anand Venkatesh", "customer")
         ]
-        for email, pwd, name, role in defaults:
+        for uid, email, pwd, name, role in defaults:
             existing = get_user_by_email(db, email)
             if not existing:
-                create_user(db, email, pwd, name, role)
+                create_user(db, email, pwd, name, role, user_id=uid)
+            elif uid and existing.id != uid:
+                existing.id = uid
+                db.commit()
     finally:
         db.close()

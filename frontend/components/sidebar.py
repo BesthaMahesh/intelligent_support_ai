@@ -116,6 +116,8 @@ def render_sidebar() -> str:
             st.session_state["authenticated"] = False
             st.session_state["user"] = None
             st.session_state["customer_active_page"] = "Overview"
+            for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                st.session_state.pop(key, None)
             st.rerun()
 
     return st.session_state["customer_active_page"]

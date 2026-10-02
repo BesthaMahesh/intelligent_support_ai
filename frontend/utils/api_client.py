@@ -83,22 +83,14 @@ class EnterpriseAPIClient:
         
         db = SessionLocal()
         try:
-            # Tickets for customer (or recent if customer matches)
-            tickets = db.query(Ticket).order_by(Ticket.created_at.desc()).all()
-            customer_tickets = [t for t in tickets if t.customer_id == customer_id or not customer_id]
-            if not customer_tickets:
-                customer_tickets = tickets[:5]
+            # Tickets for customer
+            customer_tickets = db.query(Ticket).filter(Ticket.customer_id == customer_id).order_by(Ticket.created_at.desc()).all() if customer_id else []
 
             # Conversations for customer
-            conversations = db.query(Conversation).order_by(Conversation.updated_at.desc()).all()
-            customer_convs = [c for c in conversations if c.customer_id == customer_id or not customer_id]
-            if not customer_convs:
-                customer_convs = conversations[:5]
+            customer_convs = db.query(Conversation).filter(Conversation.customer_id == customer_id).order_by(Conversation.updated_at.desc()).all() if customer_id else []
 
             # Customer Orders
-            orders_list = [v for v in MOCK_ORDERS.values() if v.get("customer_id") == customer_id]
-            if not orders_list:
-                orders_list = list(MOCK_ORDERS.values())
+            orders_list = [v for v in MOCK_ORDERS.values() if v.get("customer_id") == customer_id] if customer_id else []
 
             # Counts
             active_requests_count = len([t for t in customer_tickets if t.status in ["OPEN", "IN_PROGRESS", "WAITING_FOR_CUSTOMER", "ESCALATED"]])
@@ -164,10 +156,7 @@ class EnterpriseAPIClient:
     def get_customer_orders(customer_id: str = "CUS-8821") -> List[Dict[str, Any]]:
         """Retrieve orders for the customer."""
         from backend.tools.order_api import MOCK_ORDERS
-        orders = [v for v in MOCK_ORDERS.values() if v.get("customer_id") == customer_id]
-        if not orders:
-            orders = list(MOCK_ORDERS.values())
-        return orders
+        return [v for v in MOCK_ORDERS.values() if v.get("customer_id") == customer_id] if customer_id else []
 
     @staticmethod
     def get_customer_tickets(customer_id: str = "CUS-8821") -> List[Dict[str, Any]]:
@@ -176,7 +165,7 @@ class EnterpriseAPIClient:
         from backend.database.models import Ticket
         db = SessionLocal()
         try:
-            tickets = db.query(Ticket).order_by(Ticket.created_at.desc()).all()
+            tickets = db.query(Ticket).filter(Ticket.customer_id == customer_id).order_by(Ticket.created_at.desc()).all() if customer_id else []
             res = []
             for t in tickets:
                 res.append({
@@ -204,7 +193,7 @@ class EnterpriseAPIClient:
         from backend.database.models import Conversation, Message
         db = SessionLocal()
         try:
-            convs = db.query(Conversation).order_by(Conversation.updated_at.desc()).all()
+            convs = db.query(Conversation).filter(Conversation.customer_id == customer_id).order_by(Conversation.updated_at.desc()).all() if customer_id else []
             result = []
             for c in convs:
                 msgs = db.query(Message).filter(Message.conversation_id == c.id).order_by(Message.created_at.asc()).all()

@@ -27,16 +27,23 @@ def process_chat_message(request: ChatRequest, db: Session = Depends(get_db)):
     
     # 1. Manage Conversation Record
     conv_id = request.conversation_id
+    cust_id = request.customer_id or "CUS-8821"
+    cust_name = request.customer_name or "Valued Customer"
     conversation = None
     if conv_id:
-        conversation = db.query(Conversation).filter(Conversation.id == conv_id).first()
+        conversation = db.query(Conversation).filter(
+            Conversation.id == conv_id,
+            Conversation.customer_id == cust_id
+        ).first()
     
     if not conversation:
-        conv_id = f"CONV-{uuid.uuid4().hex[:6].upper()}"
+        # Check if requested conv_id is already taken by another user; if so or if none provided, generate a unique one
+        if not conv_id or db.query(Conversation).filter(Conversation.id == conv_id).first():
+            conv_id = f"CONV-{uuid.uuid4().hex[:6].upper()}"
         conversation = Conversation(
             id=conv_id,
-            customer_id=request.customer_id or "CUS-8821",
-            customer_name=request.customer_name or "Rajesh Kumar",
+            customer_id=cust_id,
+            customer_name=cust_name,
             intent="general_faq",
             sentiment="neutral",
             urgency="low",

@@ -27,10 +27,8 @@ def render_conversations_workspace():
     db = SessionLocal()
     try:
         raw_conversations = db.query(Conversation).filter(
-            (Conversation.customer_id == customer_id) | (Conversation.customer_id == "CUS-8821")
+            Conversation.customer_id == customer_id
         ).order_by(Conversation.updated_at.desc()).all()
-        if not raw_conversations:
-            raw_conversations = db.query(Conversation).order_by(Conversation.updated_at.desc()).limit(10).all()
         
         # Load conversation summary snippets
         conv_data = []
@@ -48,8 +46,11 @@ def render_conversations_workspace():
     finally:
         db.close()
 
-    # Active conversation state management
-    if "active_conversation_id" not in st.session_state or not st.session_state["active_conversation_id"]:
+    # Active conversation state management - validate ownership
+    valid_conv_ids = [c["id"] for c in conv_data]
+    current_active_id = st.session_state.get("active_conversation_id")
+
+    if not current_active_id or (current_active_id not in valid_conv_ids and not current_active_id.startswith("CONV-")):
         if conv_data:
             st.session_state["active_conversation_id"] = conv_data[0]["id"]
         else:
@@ -143,7 +144,10 @@ def render_conversations_workspace():
     with col_chat:
         db = SessionLocal()
         try:
-            active_conv = db.query(Conversation).filter(Conversation.id == active_id).first()
+            active_conv = db.query(Conversation).filter(
+                Conversation.id == active_id,
+                Conversation.customer_id == customer_id
+            ).first()
             messages = db.query(Message).filter(Message.conversation_id == active_id).order_by(Message.created_at.asc()).all() if active_conv else []
         finally:
             db.close()
@@ -273,4 +277,6 @@ def render_conversations_workspace():
                     customer_name=customer_name,
                     user_email=user_email
                 )
+            if resp and isinstance(resp, dict) and resp.get("conversation_id"):
+                st.session_state["active_conversation_id"] = resp["conversation_id"]
             st.rerun()

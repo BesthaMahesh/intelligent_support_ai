@@ -34,6 +34,8 @@ def render_login():
                             try:
                                 user = authenticate_user(db, email.strip(), password)
                                 if user:
+                                    for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                                        st.session_state.pop(key, None)
                                     st.session_state["authenticated"] = True
                                     st.session_state["user"] = {
                                         "id": user.id,
@@ -90,6 +92,8 @@ def render_login():
                                         full_name=reg_name.strip(),
                                         role=role_map.get(reg_role, "customer")
                                     )
+                                    for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                                        st.session_state.pop(key, None)
                                     st.session_state["authenticated"] = True
                                     st.session_state["user"] = {
                                         "id": new_user.id,
@@ -111,9 +115,11 @@ def render_login():
             bcol1, bcol2, bcol3 = st.columns(3)
             with bcol1:
                 if st.button("👤 Customer", use_container_width=True, type="primary"):
+                    for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                        st.session_state.pop(key, None)
                     st.session_state["authenticated"] = True
                     st.session_state["user"] = {
-                        "id": "USR-CUST01",
+                        "id": "CUS-8821",
                         "email": "customer@support.ai",
                         "full_name": "Rajesh Kumar",
                         "role": "customer"
@@ -122,6 +128,8 @@ def render_login():
                     st.rerun()
             with bcol2:
                 if st.button("🎧 Specialist", use_container_width=True):
+                    for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                        st.session_state.pop(key, None)
                     st.session_state["authenticated"] = True
                     st.session_state["user"] = {
                         "id": "USR-AGENT01",
@@ -133,6 +141,8 @@ def render_login():
                     st.rerun()
             with bcol3:
                 if st.button("👑 Admin", use_container_width=True):
+                    for key in ["active_conversation_id", "pending_input", "prefill_chat", "admin_mode"]:
+                        st.session_state.pop(key, None)
                     st.session_state["authenticated"] = True
                     st.session_state["user"] = {
                         "id": "USR-ADMIN01",
