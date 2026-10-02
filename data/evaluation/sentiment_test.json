@@ -1,0 +1,18 @@
+[
+  {
+    "text": "Thank you so much, you resolved my problem perfectly!",
+    "expected_sentiment": "positive"
+  },
+  {
+    "text": "Where is my order ORD-78231?",
+    "expected_sentiment": "neutral"
+  },
+  {
+    "text": "My delivery is delayed and I have been waiting for days",
+    "expected_sentiment": "negative"
+  },
+  {
+    "text": "This is completely fraudulent and terrible service, nobody helped me!",
+    "expected_sentiment": "highly_negative"
+  }
+]

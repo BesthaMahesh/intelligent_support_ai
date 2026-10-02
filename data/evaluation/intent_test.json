@@ -1,0 +1,62 @@
+[
+  {
+    "text": "What is your return policy for electronics?",
+    "expected_intent": "return_policy"
+  },
+  {
+    "text": "How do I return a damaged laptop?",
+    "expected_intent": "return_policy"
+  },
+  {
+    "text": "My payment was deducted but my order is still showing Payment Pending. Order ID is ORD-78231.",
+    "expected_intent": "payment_pending"
+  },
+  {
+    "text": "Money was debited from my bank account but order is pending",
+    "expected_intent": "payment_pending"
+  },
+  {
+    "text": "Where is my order ORD-78231?",
+    "expected_intent": "order_status"
+  },
+  {
+    "text": "Can you track the shipment for ORD-45100?",
+    "expected_intent": "order_status"
+  },
+  {
+    "text": "I ordered a laptop three days ago and paid ₹72,999. The payment was successful but the order hasn't shipped. Order ID ORD-91245.",
+    "expected_intent": "delivery_delay"
+  },
+  {
+    "text": "My package has not been delivered yet and expected date has passed",
+    "expected_intent": "delivery_delay"
+  },
+  {
+    "text": "I want a full refund for my canceled item",
+    "expected_intent": "refund_request"
+  },
+  {
+    "text": "Cancel my order ORD-10022 immediately",
+    "expected_intent": "cancellation"
+  },
+  {
+    "text": "Please connect me to a human support agent right now",
+    "expected_intent": "human_agent_request"
+  },
+  {
+    "text": "I need to speak with a human manager",
+    "expected_intent": "human_agent_request"
+  },
+  {
+    "text": "What are your shipping charges for delivery to Bangalore?",
+    "expected_intent": "shipping_policy"
+  },
+  {
+    "text": "What warranty do you provide on Apple MacBooks?",
+    "expected_intent": "product_information"
+  },
+  {
+    "text": "The app is crashing when I try to login",
+    "expected_intent": "technical_support"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "query": "What is your return policy for electronics?",
+    "expected_doc_ids": ["KB-RET-001"],
+    "expected_keywords": ["30 days", "packaging", "defective", "DOA"],
+    "golden_answer": "Electronics products can be returned within 30 days of delivery provided they are unused and include original packaging and accessories."
+  },
+  {
+    "query": "What are the shipping charges and metro delivery timelines?",
+    "expected_doc_ids": ["KB-SHP-001"],
+    "expected_keywords": ["2 to 3 business days", "free delivery", "₹999", "metro"],
+    "golden_answer": "Free delivery applies to orders above ₹999, and delivery to metro cities takes 2 to 3 business days."
+  },
+  {
+    "query": "Why is my payment deducted but the order status is still pending?",
+    "expected_doc_ids": ["KB-PAY-001"],
+    "expected_keywords": ["15 minutes", "webhook", "reconciliation"],
+    "golden_answer": "Banking webhook reconciliation can take up to 15 minutes to confirm the transaction."
+  },
+  {
+    "query": "What is the warranty coverage on electronic devices like laptops?",
+    "expected_doc_ids": ["KB-PROD-001"],
+    "expected_keywords": ["1-Year", "brand warranty", "service center"],
+    "golden_answer": "Brand new electronics include 1-Year Comprehensive Manufacturer Brand Warranty."
+  }
+]

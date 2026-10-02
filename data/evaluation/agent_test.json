@@ -1,0 +1,42 @@
+[
+  {
+    "scenario_id": "SCN-01-SIMPLE-RAG",
+    "description": "Informational inquiry about electronics returns",
+    "customer_message": "What is the return policy for electronics?",
+    "expected_route": "rag",
+    "expected_agents": ["knowledge_agent", "response_agent"],
+    "expected_human_escalation": false
+  },
+  {
+    "scenario_id": "SCN-02-ORDER-TRACKING",
+    "description": "Simple order status tracking",
+    "customer_message": "Where is order ORD-78231?",
+    "expected_route": "business_tool",
+    "expected_agents": ["order_agent", "shipment_agent", "response_agent"],
+    "expected_human_escalation": false
+  },
+  {
+    "scenario_id": "SCN-03-PAYMENT-PENDING",
+    "description": "Payment deducted while order is pending within SLA",
+    "customer_message": "My payment was deducted but my order is still showing Payment Pending. Order ID is ORD-78231.",
+    "expected_route": "business_tool",
+    "expected_agents": ["order_agent", "payment_agent", "knowledge_agent", "response_agent"],
+    "expected_human_escalation": false
+  },
+  {
+    "scenario_id": "SCN-04-COMPLEX-DELAY-ESCALATION",
+    "description": "Complex delay with high value and previous failed contact",
+    "customer_message": "I ordered a laptop three days ago and paid ₹72,999. The payment was successful but the order hasn't shipped. I contacted support yesterday and nobody helped me. Order ID ORD-91245.",
+    "expected_route": "multi_tool",
+    "expected_agents": ["order_agent", "shipment_agent", "payment_agent", "customer_agent", "knowledge_agent", "response_agent"],
+    "expected_human_escalation": true
+  },
+  {
+    "scenario_id": "SCN-05-HUMAN-REQUEST",
+    "description": "Explicit human agent transfer",
+    "customer_message": "Please connect me to a human agent right now.",
+    "expected_route": "human_escalation",
+    "expected_agents": ["customer_agent", "escalation_agent", "response_agent"],
+    "expected_human_escalation": true
+  }
+]

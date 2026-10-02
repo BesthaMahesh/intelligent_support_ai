@@ -1,0 +1,26 @@
+[
+  {
+    "text": "My payment was deducted for order ORD-78231 worth ₹24,990",
+    "expected_entities": {
+      "order_id": "ORD-78231",
+      "amount": 24990.0,
+      "currency": "INR"
+    }
+  },
+  {
+    "text": "Order ORD-91245 for a laptop of INR 72999 has not shipped",
+    "expected_entities": {
+      "order_id": "ORD-91245",
+      "product": "laptop",
+      "amount": 72999.0,
+      "currency": "INR"
+    }
+  },
+  {
+    "text": "Customer CUS-8821 asking for refund on headphones",
+    "expected_entities": {
+      "customer_id": "CUS-8821",
+      "product": "headphones"
+    }
+  }
+]
